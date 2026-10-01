@@ -6,7 +6,7 @@ export const BLUEPRINT_FORMAT = '1agents.feature-blueprint';
 /** Version understood by this reader; unsupported versions fail before editing. */
 export const BLUEPRINT_VERSION = 1;
 
-/** A complete local blueprint; ids remain stable across renames and moves. */
+/** A complete local mind map; ids remain stable across renames and moves. */
 export interface BlueprintDocument {
     format: typeof BLUEPRINT_FORMAT;
     version: typeof BLUEPRINT_VERSION;
@@ -31,19 +31,19 @@ function isNode(value: unknown): value is BlueprintNode {
  * @throws For invalid fields, duplicate ids, missing parents, cycles or excessive depth.
  */
 export function readBlueprintNodes(value: unknown): BlueprintNode[] {
-    if (!Array.isArray(value) || !value.every(isNode)) throw new Error('Invalid blueprint node fields');
+    if (!Array.isArray(value) || !value.every(isNode)) throw new Error('Invalid mind map node fields');
     const nodes: BlueprintNode[] = value;
     const byId = new Map(nodes.map(node => [node.id, node]));
-    if (byId.size !== nodes.length) throw new Error('Duplicate blueprint node ids');
+    if (byId.size !== nodes.length) throw new Error('Duplicate mind map node ids');
     for (const node of nodes) {
         if (node.kind === 'feature' && !node.parentId) throw new Error(`Feature ${node.id} requires a module parent`);
         const seen = new Set<string>();
         let current: BlueprintNode | undefined = node;
         let depth = 0;
         while (current) {
-            if (seen.has(current.id)) throw new Error('Blueprint contains a cycle');
+            if (seen.has(current.id)) throw new Error('Mind map contains a cycle');
             seen.add(current.id);
-            if (current.kind === 'module' && ++depth > MAX_FEATURE_MODULE_DEPTH) throw new Error('Blueprint exceeds nine module levels');
+            if (current.kind === 'module' && ++depth > MAX_FEATURE_MODULE_DEPTH) throw new Error('Mind map exceeds nine module levels');
             const parent: BlueprintNode | undefined = current.parentId ? byId.get(current.parentId) : undefined;
             if (current.parentId && parent?.kind !== 'module') throw new Error(`Invalid module parent for ${current.id}`);
             current = parent;

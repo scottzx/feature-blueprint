@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Agent-facing local blueprint commands; stdout is JSON except for help. */
+/** Agent-facing local mind map commands; stdout is JSON except for help. */
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { buildFeatureTree, flattenFeatureTree, moveFeatureNode, featureDescendantIds, siblingNodes } from '../dist/model.js';
@@ -19,6 +19,8 @@ notes --id <id> --text <text>  Set multiline remarks; an empty string clears the
 move --id <id> (--inside <module-id> | --before <id> | --after <id> | --root)
 remove --id <id> [--subtree]   Delete a leaf; --subtree explicitly deletes its descendants too.
 schema                       Print the JSON Schema (no filename).
+
+canvas <command>             Run the bundled Excalidraw CLI (canvas help for commands).
 
 Mutation commands except init accept --expect-revision <sha256> from show/list/validate.
 All file commands return JSON; errors use stderr and exit 1. Ids survive moves/renames.
@@ -66,7 +68,7 @@ async function main(args) {
         if (file !== undefined) throw new Error('schema takes no filename or options');
         process.stdout.write(await readFile(new URL('../schema/blueprint.schema.json', import.meta.url), 'utf8')); return;
     }
-    if (!file || file.startsWith('--')) throw new Error('An explicit blueprint filename is required');
+    if (!file || file.startsWith('--')) throw new Error('An explicit mind map filename is required');
     const options = optionsFor(command, rest);
     if (command === 'open') {
         const port = options.port === undefined ? 0 : Number(options.port);
@@ -145,7 +147,7 @@ async function main(args) {
                     && siblings[index + (placement === 'before' ? 1 : -1)]?.id === targetId;
                 const validNoop = placement === 'root' ? node.kind === 'module' && !node.parentId
                     : placement === 'inside' ? target?.kind === 'module' && node.parentId === targetId : adjacent;
-                if (!validNoop) throw new Error('Move violates the blueprint hierarchy');
+                if (!validNoop) throw new Error('Move violates the mind map hierarchy');
             }
             document.nodes = [...moved];
             return { node: findNode(document.nodes, id) };
@@ -153,7 +155,12 @@ async function main(args) {
     }
     process.stdout.write(`${JSON.stringify({ ok: true, ...result })}\n`);
 }
-try { await main(process.argv.slice(2)); }
+try {
+    if (process.argv[2] === 'canvas') {
+        process.argv.splice(2, 1);
+        await import('../canvas/src/cli/canvas.mjs');
+    } else await main(process.argv.slice(2));
+}
 catch (error) {
     process.stderr.write(`${JSON.stringify({ ok: false, error: { code: error.code ?? 'INVALID_BLUEPRINT', message: error.message } })}\n`);
     process.exitCode = 1;

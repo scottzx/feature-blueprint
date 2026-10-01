@@ -1,4 +1,4 @@
-/** A small blueprint editor for embeddings without project-management services. */
+/** A small mind map editor for embeddings without project-management services. */
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import {
     buildFeatureTree, moveFeatureNode, siblingNodes, featureDescendantIds,
@@ -43,7 +43,7 @@ export interface BlueprintEditorProps {
 }
 
 /**
- * Edit a blueprint independently of tasks, milestones, accounts, or AI sessions.
+ * Edit a mind map independently of tasks, milestones, accounts, or AI sessions.
  * @param props - Host-owned nodes, localized labels and synchronous change callback.
  * @returns A hierarchy editor, or a file view limited to selection and collapse.
  */

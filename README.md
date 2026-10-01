@@ -1,6 +1,6 @@
-# Feature Blueprint
+# Mind Map
 
-一个 MIT npm 包，包含文件 CLI、独立浏览器编辑器、可复用 Preact 组件和 DSH 插件，统一名称及版本号：`@1agents/feature-blueprint`。CLI 和独立编辑器需要 Node.js 22+；使用它们无需安装或启动 DSH。
+一个 MIT npm 包，包含思维导图、Excalidraw 自由画布、各自的 CLI 和独立浏览器编辑器，以及提供两个侧栏入口的 DSH 插件，统一名称及版本号：`@1agents/feature-blueprint`。CLI 和独立编辑器需要 Node.js 22+；使用它们无需安装或启动 DSH。
 
 ```sh
 npm install -g @1agents/feature-blueprint
@@ -10,7 +10,9 @@ blueprint open product.blueprint.json
 
 也可不全局安装：`npx @1agents/feature-blueprint open product.blueprint.json`。
 
-从 1agents App 功能蓝图抽出的树形组件。提供列表和思维导图两种展示，保留模块／功能点层级、展开折叠，以及拖到节点前面、后面、内部或一级目录的交互。树形计算不依赖 DOM、前端框架、项目任务或后端接口。
+产品名称为“思维导图”（Mind Map）。包名 `@1agents/feature-blueprint`、CLI 命令 `blueprint`、`*.blueprint.json` 文件格式及已有浏览器存储保持兼容，现有文件和会话数据可继续使用。
+
+从 1agents App 思维导图抽出的树形组件。提供列表和思维导图两种展示，保留模块／功能点层级、展开折叠，以及拖到节点前面、后面、内部或一级目录的交互。树形计算不依赖 DOM、前端框架、项目任务或后端接口。
 
 ## 组成
 
@@ -25,11 +27,30 @@ blueprint open product.blueprint.json
 | `@1agents/feature-blueprint/schema.json` | 文件字段的 JSON Schema；图关系由共享校验器检查 |
 | `blueprint` | 本地文件读写、增删改名和层级移动，返回 JSON |
 | `blueprint open <file>` | 启动独立浏览器编辑器，直接保存本地文件 |
-| [DSH 插件](packages/dsh-plugin/README.md) | 侧边栏编辑器及 `*.blueprint.json` 文件预览 |
+| [DSH 插件](packages/dsh-plugin/README.md) | 思维导图、自由画布两个侧栏入口及对应文件预览 |
+| `voice-canvas` / `blueprint canvas` | Excalidraw 自由画布、CLI 和本地 HTTP / WebSocket 桥接 |
+| `@1agents/feature-blueprint/canvas/server` | `serve(port)`，启动独立画布服务 |
+| [自由画布模块](canvas/README.md) | 独立维护的画布源码与集成测试，使用根包统一构建和发布 |
+
+## Excalidraw 自由画布
+
+自由画布源码从 `scottzx/voice-canvas` 的 `main` 迁入 `canvas/`，与思维导图共用根目录的 `package.json`、锁文件、版本和发布工作流。安装一次即可使用两个功能；画布模块没有单独的 npm 包或发布流程。
+
+```sh
+npm install -g @1agents/feature-blueprint
+voice-canvas serve
+# 在浏览器打开 http://127.0.0.1:5178/，另一个终端执行：
+voice-canvas add "新想法" --x 100 --y 100
+voice-canvas state
+```
+
+不全局安装时可用 `npx @1agents/feature-blueprint canvas serve` 和 `npx @1agents/feature-blueprint canvas state`。`blueprint` 与 `feature-blueprint` 是同一思维导图 CLI 的两个入口，后者保证多命令包仍能通过 `npx @1agents/feature-blueprint ...` 调用。
+
+自由画布与思维导图保持各自的数据格式和浏览器资源。画布使用原来的 `voice-canvas-v1` localStorage 键，仍需保持一个画布标签在线，CLI 才能操作。DSH 插件同时提供自由画布入口和 `*.excalidraw` 文件预览；会话画布按需加载并跟随宿主主题。详细命令、数据保存和测试说明见 [画布说明](canvas/README.md)。
 
 ## 本地文件与 CLI
 
-一份蓝图对应一个 `*.blueprint.json` 文件，示例见 [product.blueprint.json](examples/product.blueprint.json)。顶层固定为 `format: "1agents.feature-blueprint"`、`version: 1` 和 `nodes`。节点包含稳定 `id`、`kind`（`module` 或 `feature`）、`title`、非负整数 `position`、UTC 毫秒格式的 `createdAt`，子节点额外包含 `parentId`。模块和功能点均可添加可选的 `notes: string` 备注，支持多行纯文本及空字符串；省略时表示没有备注，旧文件无需迁移。同级节点按 `position`、`createdAt`、`id` 排序；移动会重新编号受影响的同级节点。最多九级模块，功能点是模块下的叶节点。未知文档及节点字段会在修改时保留，可用于宿主元数据；它们不自动进入树的展示。
+一份思维导图对应一个 `*.blueprint.json` 文件，示例见 [product.blueprint.json](examples/product.blueprint.json)。顶层固定为 `format: "1agents.feature-blueprint"`、`version: 1` 和 `nodes`。节点包含稳定 `id`、`kind`（`module` 或 `feature`）、`title`、非负整数 `position`、UTC 毫秒格式的 `createdAt`，子节点额外包含 `parentId`。模块和功能点均可添加可选的 `notes: string` 备注，支持多行纯文本及空字符串；省略时表示没有备注，旧文件无需迁移。同级节点按 `position`、`createdAt`、`id` 排序；移动会重新编号受影响的同级节点。最多九级模块，功能点是模块下的叶节点。未知文档及节点字段会在修改时保留，可用于宿主元数据；它们不自动进入树的展示。
 
 Agent 可直接编辑 JSON 后运行 `validate`，也可使用下列命令。在源码目录中通过 `node cli/blueprint.mjs` 调用；安装包后命令名是 `blueprint`。
 
@@ -49,11 +70,11 @@ node cli/blueprint.mjs validate product.blueprint.json
 
 读取命令和成功修改均返回 `revision`，它是文件字节的 SHA-256。Agent 先读后改时，可把它传给 `--expect-revision`，旧版本会被拒绝；未传时命令修改当前磁盘版本。所有 CLI 写操作使用同目录锁和临时文件，成功后原子替换，`init` 从不覆盖已有文件。已有符号链接通过真实目标修改，保留链接。正在写入时其他命令立即失败；异常中止可能留下 `<file>.lock`，确认没有写入进程后可手动删除。其他编辑器不参与此锁协议，仍可能在最后一次检查与替换之间竞争；需要统一并发保证的调用方应全部使用 CLI。
 
-文件是持久数据源，可以放入项目和 Git。DSH 打开同一文件后显示蓝图，CLI 修改由文件预览的自动刷新机制反映到页面；文件预览不保存另一份蓝图。它提供选择、展开和折叠，编辑操作由 CLI 完成。浏览器本地编辑器仍是独立的临时工作区，详见插件说明。
+文件是持久数据源，可以放入项目和 Git。DSH 打开同一文件后显示思维导图，CLI 修改由文件预览的自动刷新机制反映到页面；文件预览不保存另一份思维导图。它提供选择、展开和折叠，编辑操作由 CLI 完成。浏览器本地编辑器仍是独立的临时工作区，详见插件说明。
 
 ## 独立浏览器编辑器
 
-`blueprint open <file.blueprint.json>` 打开已存在且通过校验的蓝图文件，默认显示思维导图，也可切换列表。新增、删除、重命名、备注和拖拽操作直接保存到该文件，保留文档及节点扩展字段。编辑器每两秒读取一次文件，跟随 CLI 或外部编辑器的修改，不使用 localStorage 保存另一份节点。
+`blueprint open <file.blueprint.json>` 打开已存在且通过校验的思维导图文件，默认显示思维导图，也可切换列表。新增、删除、重命名、备注和拖拽操作直接保存到该文件，保留文档及节点扩展字段。编辑器每两秒读取一次文件，跟随 CLI 或外部编辑器的修改，不使用 localStorage 保存另一份节点。
 
 命令先输出 `{ ok, path, url }` JSON，再保持服务运行；关闭网页不会停止服务，终端按 Ctrl-C 停止。默认自动选择空闲端口并打开系统浏览器；`--no-browser` 仅输出 URL，`--port 4178` 指定端口。服务只监听 `127.0.0.1`，只读写传入的文件，不提供目录或任意路径接口。提交包含文件修订号，冲突不会覆盖文件；保存失败时页面提供下载未保存修改的入口。单次浏览器提交最多 10 MiB。
 
@@ -67,11 +88,12 @@ npm run build
 npm test
 npm run build:demo
 npm run build:plugin
+npm run dev:canvas
 ```
 
 `demo-dist/index.html` 必须经 HTTP 静态服务器访问。演示数据只保存在当前页面内存中；刷新回到示例树。
 
-这个目录是独立的 npm 项目。1agents 前端在本地开发时通过 `portal:../../services/feature-blueprint` 引用它；构建原前端前必须先构建本包，并保留两个目录的相对位置。其他消费者可直接安装 npm 包。源码构建生成模型声明、独立浏览器资源和 DSH client，发布包已包含这些产物，用户无需构建。组件消费者需自行安装 `preact`；它是可选 peer，不影响独立 CLI。
+这个目录是独立的 npm 项目。1agents 前端在本地开发时通过 `portal:../../services/feature-blueprint` 引用它；构建原前端前必须先构建本包，并保留两个目录的相对位置。其他消费者可直接安装 npm 包。源码构建生成模型声明、思维导图浏览器资源、Excalidraw 画布资源和 DSH client，发布包已包含这些产物，用户无需构建。组件消费者需自行安装 `preact`；它是可选 peer，不影响独立 CLI。
 
 ## 调用
 
@@ -105,6 +127,6 @@ const moved = moveFeatureNode(nodes, 'login', { targetId: 'account', placement: 
 
 ## 发布
 
-GitHub 仓库：[scottzx/feature-blueprint](https://github.com/scottzx/feature-blueprint)。`main` 的 push 和 PR 运行 CI；推送与 `package.json` 对应的 `v<version>` tag，或手动运行 `Publish npm` 工作流，会在类型检查、测试及打包检查通过后以 provenance 发布唯一的 `@1agents/feature-blueprint` 包。npm 发布凭据从 GitHub Actions 的 `NPM_TOKEN` secret 读取，源码不包含凭据。DSH 插件和 CLI 使用该包相同的版本号，`packages/dsh-plugin` 只保留插件源码和开发资料，不单独发布。
+GitHub 仓库：[scottzx/feature-blueprint](https://github.com/scottzx/feature-blueprint)。`main` 的 push 和 PR 运行 CI；推送与 `package.json` 对应的 `v<version>` tag，或手动运行 `Publish npm` 工作流，会在类型检查、测试及打包检查通过后以 provenance 发布唯一的 `@1agents/feature-blueprint` 包。npm 发布凭据从 GitHub Actions 的 `NPM_TOKEN` secret 读取，源码不包含凭据。DSH 插件、思维导图 CLI 和画布 CLI 使用该包相同的版本号，`packages/dsh-plugin` 只保留插件源码和开发资料，不单独发布。
 
-MIT 协议见 [LICENSE](LICENSE)，打包的 Preact 许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+MIT 协议见 [LICENSE](LICENSE)，打包的 Preact、React 和 Excalidraw 等许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

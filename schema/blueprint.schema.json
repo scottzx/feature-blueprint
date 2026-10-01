@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:1agents:feature-blueprint:1",
-  "title": "1agents Feature Blueprint",
+  "title": "1agents Mind Map",
   "description": "Ids must be unique; parents reference modules; features require parents; cycles are forbidden; at most nine module levels. The CLI and viewer check these graph rules.",
   "type": "object",
   "required": [

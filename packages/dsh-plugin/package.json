@@ -1,7 +1,7 @@
 {
   "name": "@1agents/dsh-feature-blueprint",
-  "version": "0.1.0",
-  "description": "Reusable feature blueprint editor in the DeepSeek Harness right sidebar",
+  "version": "0.2.1",
+  "description": "Reusable mind map editor in the DeepSeek Harness right sidebar",
   "type": "module",
   "license": "MIT",
   "exports": {

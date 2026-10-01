@@ -8,3 +8,4 @@ packages/dsh-plugin/dist/
 test-results/
 tsconfig.dsh.local.json
 test-results-*.png
+canvas/dist/

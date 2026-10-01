@@ -14,39 +14,40 @@ import { type BlueprintEditorLabels } from '../../../dist/editor.js';
 import type { BlueprintNode } from '../../../dist/model.js';
 import style from '../../../src/style.css';
 import { readBlueprintNodes, readBlueprintDocument } from './document.js';
+import { registerCanvas } from './canvas.js';
 
 const NS = 'oneagentsBlueprint';
 const ID = '@1agents/feature-blueprint';
 const zh = {
-    title: '功能蓝图', description: '整理层级，拖拽调整模块和功能点',
-    tree: '功能蓝图树', rootDrop: '将模块拖到这里，移回一级目录',
+    title: '思维导图', description: '整理层级，拖拽调整模块和功能点',
+    tree: '思维导图', rootDrop: '将模块拖到这里，移回一级目录',
     expand: '展开{title}', collapse: '折叠{title}', addModule: '添加模块', addFeature: '添加功能点',
     rename: '重命名', remove: '删除', name: '名称', save: '保存', cancel: '取消',
-    empty: '添加模块，开始整理功能蓝图', module: '模块', feature: '功能点',
-    viewLabel: '蓝图视图', listView: '列表', mindmapView: '思维导图',
+    empty: '添加模块，开始整理思维导图', module: '模块', feature: '功能点',
+    viewLabel: '展示方式', listView: '列表', mindmapView: '思维导图',
     zoomIn: '放大', zoomOut: '缩小', resetZoom: '重置缩放', addRoot: '添加一级模块',
     notes: '备注', editNotes: '编辑备注', emptyNotes: '暂无备注',
     fileMode: '文件预览 · 通过 blueprint CLI 修改，文件变化后自动刷新',
-    fileEmpty: '蓝图文件还没有节点', invalidFile: '无法读取蓝图文件：{message}',
+    fileEmpty: '思维导图文件还没有节点', invalidFile: '无法读取思维导图文件：{message}',
 };
 const en: Record<keyof typeof zh, string> = {
-    title: 'Feature blueprint', description: 'Organize modules and features by dragging their hierarchy',
-    tree: 'Feature blueprint tree', rootDrop: 'Drop a module here to move it to the top level',
+    title: 'Mind map', description: 'Organize modules and features by dragging their hierarchy',
+    tree: 'Mind map', rootDrop: 'Drop a module here to move it to the top level',
     expand: 'Expand {title}', collapse: 'Collapse {title}', addModule: 'Add module', addFeature: 'Add feature',
     rename: 'Rename', remove: 'Delete', name: 'Name', save: 'Save', cancel: 'Cancel',
-    empty: 'Add a module to start your blueprint', module: 'Module', feature: 'Feature',
-    viewLabel: 'Blueprint view', listView: 'List', mindmapView: 'Mind map',
+    empty: 'Add a module to start your mind map', module: 'Module', feature: 'Feature',
+    viewLabel: 'View mode', listView: 'List', mindmapView: 'Mind map',
     zoomIn: 'Zoom in', zoomOut: 'Zoom out', resetZoom: 'Reset zoom', addRoot: 'Add top-level module',
     notes: 'Notes', editNotes: 'Edit notes', emptyNotes: 'No notes yet',
     fileMode: 'File preview · Edit with the blueprint CLI; file changes refresh automatically',
-    fileEmpty: 'The blueprint file has no nodes', invalidFile: 'Cannot read blueprint file: {message}',
+    fileEmpty: 'The mind map file has no nodes', invalidFile: 'Cannot read mind map file: {message}',
 };
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
     interface LocaleNamespaceMap { oneagentsBlueprint: keyof typeof zh }
 }
 
-/** One blueprint per Session, shared by its sidebar panes. */
+/** One mind map per Session, shared by its sidebar panes. */
 function createStore() {
     return defineStore({
         init: (): { nodes: BlueprintNode[] } => ({ nodes: [] }),
@@ -113,10 +114,11 @@ function BlueprintFileBody({ content, resourceAddress, t }: DocumentPreviewProps
 export const inject = ['slots', 'locale', 'sidebarRightTabs', 'documentPreviews'];
 
 /**
- * Register the blueprint page through DSH's sidebar extension points.
+ * Register the mind map page through DSH's sidebar extension points.
  * @param ctx - Browser context supplied by the Client loader.
  */
 export function apply(ctx: Context): void {
+    registerCanvas(ctx);
     const t = ctx.locale.bind(NS);
     ctx.effect(() => ctx.locale.register(NS, { zh, en }));
     ctx.effect(() => {

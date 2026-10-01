@@ -1,4 +1,4 @@
-/** Hierarchy and drag placement for module/feature blueprints; no application services. */
+/** Hierarchy and drag placement for module/feature mind maps; no application services. */
 
 /** Modules can contain modules and features; features are leaves. */
 export type BlueprintNodeKind = 'module' | 'feature';
@@ -23,7 +23,7 @@ export interface BlueprintTreeNode<T extends BlueprintNode = BlueprintNode> {
     children: BlueprintTreeNode<T>[];
 }
 
-/** Default nesting limit inherited from the feature blueprint. */
+/** Default nesting limit inherited from the mind map. */
 export const MAX_FEATURE_MODULE_DEPTH = 9;
 
 /** Sibling insertion, child insertion, or append to the top-level module group. */
