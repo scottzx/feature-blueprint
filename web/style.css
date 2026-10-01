@@ -1,0 +1,16 @@
+body { margin: 0; padding: 24px; font: 14px/1.5 system-ui, sans-serif; color: #253047; background: #f5f7fa; }
+.blueprint-workspace { max-width: 1400px; margin: auto; }
+.blueprint-file-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.blueprint-file-header h1 { font-size: 22px; font-weight: 600; margin: 0; }
+#file-path { margin: 6px 0 16px; color: #61708a; overflow-wrap: anywhere; }
+#save-status { color: #61708a; font-size: 12px; }
+#app { border-radius: 12px; background: white; }
+#file-error { padding: 10px 12px; border: 1px solid #bf514b; border-radius: 7px; color: #92332e; overflow-wrap: anywhere; }
+#file-error a { color: inherit; }
+@media (max-width: 600px) { body { padding: 12px; } }
+@media (prefers-color-scheme: dark) {
+    body { color: #e3e8f0; background: #151a22; }
+    #file-path, #save-status { color: #a4afbf; }
+    #app { background: #202735; --text-main: #e3e8f0; --text-muted: #a4afbf; --accent-color: #8eb8ff; }
+    #file-error { color: #ffc0bb; }
+}

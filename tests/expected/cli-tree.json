@@ -1,0 +1,6 @@
+[
+  { "id": "accounts", "kind": "module", "title": "accounts", "position": 0, "depth": 0 },
+  { "id": "sms", "parentId": "accounts", "kind": "feature", "title": "sms", "position": 0, "depth": 1 },
+  { "id": "workspace", "kind": "module", "title": "workspace", "position": 1, "depth": 0 },
+  { "id": "login", "parentId": "workspace", "kind": "feature", "title": "密码登录", "position": 0, "depth": 1 }
+]

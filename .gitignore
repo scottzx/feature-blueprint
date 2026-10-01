@@ -1,0 +1,10 @@
+node_modules/
+dist/
+demo-dist/
+web-dist/
+*.tgz
+.npmrc
+packages/dsh-plugin/dist/
+test-results/
+tsconfig.dsh.local.json
+test-results-*.png

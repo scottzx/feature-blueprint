@@ -1,0 +1,122 @@
+{
+  "name": "@1agents/feature-blueprint",
+  "version": "0.1.0",
+  "description": "Feature blueprints with a file CLI, browser mind map editor and DSH plugin",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./preact": {
+      "types": "./dist/tree.d.ts",
+      "default": "./dist/tree.js"
+    },
+    "./editor": {
+      "types": "./dist/editor.d.ts",
+      "default": "./dist/editor.js"
+    },
+    "./mount": {
+      "types": "./dist/mount.d.ts",
+      "default": "./dist/mount.js"
+    },
+    "./style.css": "./src/style.css",
+    "./package.json": "./package.json",
+    "./document": {
+      "types": "./dist/document.d.ts",
+      "default": "./dist/document.js"
+    },
+    "./schema.json": "./schema/blueprint.schema.json",
+    "./client": "./packages/dsh-plugin/dist/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "dist",
+    "src/style.css",
+    "README.md",
+    "LICENSE",
+    "cli",
+    "schema",
+    "examples/product.blueprint.json",
+    "web-dist",
+    "cordis.patch.yml",
+    "packages/dsh-plugin/dist/client.js",
+    "packages/dsh-plugin/README.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsc && npm run build:web && npm run build:plugin",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "build:demo": "node scripts/build-demo.mjs",
+    "prepack": "npm run build",
+    "build:plugin": "node scripts/build-plugin.mjs",
+    "build:web": "node scripts/build-web.mjs",
+    "check": "tsc --noEmit && tsc -p tsconfig.web.json"
+  },
+  "peerDependencies": {
+    "preact": "^10.19.6"
+  },
+  "devDependencies": {
+    "preact": "^10.19.6",
+    "preact-render-to-string": "^6.5.0",
+    "typescript": "^5.7.2",
+    "esbuild": "^0.28.2",
+    "react": "^18.2.0",
+    "@types/react": "~18.3.1"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "preact": [
+        "dist/tree.d.ts"
+      ],
+      "editor": [
+        "dist/editor.d.ts"
+      ],
+      "mount": [
+        "dist/mount.d.ts"
+      ],
+      "document": [
+        "dist/document.d.ts"
+      ]
+    }
+  },
+  "bin": {
+    "blueprint": "./cli/blueprint.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": true
+    }
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar-right",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-sidebar-documentpreview"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottzx/feature-blueprint.git"
+  },
+  "homepage": "https://github.com/scottzx/feature-blueprint#readme",
+  "bugs": {
+    "url": "https://github.com/scottzx/feature-blueprint/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

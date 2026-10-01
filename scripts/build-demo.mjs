@@ -1,0 +1,9 @@
+import { build } from 'esbuild';
+import { mkdir, copyFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
+const root = fileURLToPath(new URL('..', import.meta.url));
+await mkdir(resolve(root, 'demo-dist'), { recursive: true });
+await build({ absWorkingDir: root, entryPoints: ['examples/demo.ts'], outfile: 'demo-dist/demo.js', bundle: true, platform: 'browser', format: 'esm', target: 'es2022' });
+await copyFile(resolve(root, 'examples/index.html'), resolve(root, 'demo-dist/index.html'));
+await copyFile(resolve(root, 'src/style.css'), resolve(root, 'demo-dist/style.css'));

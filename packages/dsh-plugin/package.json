@@ -1,0 +1,43 @@
+{
+  "name": "@1agents/dsh-feature-blueprint",
+  "version": "0.1.0",
+  "description": "Reusable feature blueprint editor in the DeepSeek Harness right sidebar",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.js",
+    "./client": "./dist/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src/index.js",
+    "dist/client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar-right",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-sidebar-documentpreview"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-plugin.mjs"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-client-store": "^0.1.7-rc.2",
+    "@deepseek-ai/dsh-client-ui-primitives": "^0.1.7-rc.2",
+    "react": "^18.2.0"
+  },
+  "private": true
+}

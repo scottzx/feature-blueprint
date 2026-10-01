@@ -1,0 +1,3 @@
+- insert:
+    - id: oneagents-feature-blueprint
+      name: '@1agents/feature-blueprint'

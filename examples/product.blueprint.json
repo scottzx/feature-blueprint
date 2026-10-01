@@ -1,0 +1,29 @@
+{
+  "format": "1agents.feature-blueprint",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "accounts",
+      "kind": "module",
+      "title": "账号与权限",
+      "position": 0,
+      "createdAt": "2026-10-01T00:00:00.000Z"
+    },
+    {
+      "id": "login",
+      "parentId": "accounts",
+      "kind": "feature",
+      "title": "密码登录",
+      "notes": "支持邮箱或手机号登录\n连续失败后显示验证码",
+      "position": 0,
+      "createdAt": "2026-10-01T00:00:00.000Z"
+    },
+    {
+      "id": "workspace",
+      "kind": "module",
+      "title": "工作区",
+      "position": 1,
+      "createdAt": "2026-10-01T00:00:00.000Z"
+    }
+  ]
+}

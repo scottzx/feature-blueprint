@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:1agents:feature-blueprint:1",
+  "title": "1agents Feature Blueprint",
+  "description": "Ids must be unique; parents reference modules; features require parents; cycles are forbidden; at most nine module levels. The CLI and viewer check these graph rules.",
+  "type": "object",
+  "required": [
+    "format",
+    "version",
+    "nodes"
+  ],
+  "properties": {
+    "format": {
+      "const": "1agents.feature-blueprint"
+    },
+    "version": {
+      "const": 1
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "position",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "parentId": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "kind": {
+            "enum": [
+              "module",
+              "feature"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional plain-text remarks; may be empty or contain multiple lines."
+          },
+          "position": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "feature"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "parentId"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

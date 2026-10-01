@@ -1,0 +1,100 @@
+/* Scoped styles for standalone and DSH embeddings; 1agents keeps its existing tree theme. */
+.blueprint-editor {
+    --blueprint-ink: var(--text-main, var(--dsw-alias-label-primary, #222));
+    --blueprint-muted: var(--text-muted, var(--dsw-alias-label-secondary, #666));
+    --blueprint-accent: var(--accent-color, var(--dsw-alias-accent-primary, #4169b1));
+    --blueprint-hover: var(--btn-hover, color-mix(in srgb, currentColor 5%, transparent));
+    --blueprint-selection: var(--accent-light, color-mix(in srgb, var(--blueprint-accent) 10%, transparent));
+    color: var(--blueprint-ink);
+    font: inherit;
+    font-size: 13px;
+    padding: 12px;
+}
+.blueprint-editor ul { list-style: none; padding: 0; margin: 0; }
+.blueprint-editor .feature-tree { padding: 8px 0; }
+.blueprint-editor .feature-tree-item { position: relative; }
+.blueprint-editor .feature-tree-row {
+    position: relative; display: flex; align-items: center; gap: 8px; min-width: 0;
+    padding: 8px 10px 8px calc(10px + var(--feature-depth, 0) * 18px);
+    border-radius: 7px; cursor: grab; user-select: none;
+}
+.blueprint-editor .feature-tree-row:hover { background: var(--blueprint-hover); }
+.blueprint-editor .feature-tree-row.selected { background: var(--blueprint-selection); color: var(--blueprint-accent); }
+.blueprint-editor .feature-tree-row.dragging { opacity: .45; cursor: grabbing; }
+.blueprint-editor .feature-tree-row[draggable="false"] { cursor: default; }
+.blueprint-editor .feature-tree-row:focus-visible { outline: 2px solid var(--blueprint-accent); outline-offset: -2px; }
+.blueprint-editor .feature-tree-toggle {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 20px;
+    width: 20px; height: 20px; padding: 0; border: 0; border-radius: 5px;
+    background: transparent; color: var(--blueprint-muted); font: inherit; cursor: pointer;
+}
+.blueprint-editor .feature-tree-toggle:disabled { cursor: default; }
+.blueprint-editor .feature-tree-toggle.placeholder { color: var(--blueprint-accent); font-size: 20px; }
+.blueprint-editor .feature-tree-copy { flex: 1; min-width: 0; }
+.blueprint-editor .feature-tree-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.blueprint-editor .feature-tree-item.drop-before > .feature-tree-row::before,
+.blueprint-editor .feature-tree-item.drop-after > .feature-tree-row::after {
+    content: ""; position: absolute; right: 10px; left: calc(10px + var(--feature-depth, 0) * 18px);
+    height: 2px; border-radius: 7px; background: var(--blueprint-accent);
+}
+.blueprint-editor .feature-tree-item.drop-before > .feature-tree-row::before { top: -1px; }
+.blueprint-editor .feature-tree-item.drop-after > .feature-tree-row::after { bottom: -1px; }
+.blueprint-editor .feature-tree-item.drop-inside > .feature-tree-row {
+    outline: 2px solid var(--blueprint-accent); outline-offset: -2px; background: var(--blueprint-selection);
+}
+.blueprint-editor .feature-root-drop { margin: 8px; padding: 12px; border: 1px dashed var(--blueprint-muted); border-radius: 7px; color: var(--blueprint-muted); }
+.blueprint-editor .feature-root-drop.active { border-color: var(--blueprint-accent); background: var(--blueprint-selection); }
+.blueprint-editor .feature-root-drop.disabled { opacity: .5; }
+.blueprint-readonly .feature-root-drop { display: none; }
+.blueprint-editor .blueprint-toolbar, .blueprint-editor .blueprint-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.blueprint-editor .blueprint-form label { display: flex; align-items: center; gap: 8px; }
+.blueprint-editor button:not(.feature-tree-toggle), .blueprint-editor input, .blueprint-editor textarea {
+    max-width: 100%; min-width: 0; border: 1px solid var(--blueprint-muted); border-radius: 7px;
+    padding: 6px 8px; color: inherit; background: transparent; font: inherit;
+}
+.blueprint-editor button:disabled { opacity: .5; cursor: default; }
+.blueprint-editor .blueprint-empty { color: var(--blueprint-muted); }
+.blueprint-editor .feature-tree-note { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--blueprint-muted); font-size: 12px; font-weight: 400; margin-top: 3px; }
+.blueprint-editor .blueprint-form .blueprint-notes-field { flex-basis: 100%; align-items: flex-start; }
+.blueprint-editor .blueprint-notes-field textarea { flex: 1; resize: vertical; box-sizing: border-box; }
+.blueprint-editor .blueprint-node-notes { margin-bottom: 12px; padding: 10px 12px; border-radius: 7px; background: var(--blueprint-hover); }
+.blueprint-editor .blueprint-node-notes p { margin: 6px 0 0; color: var(--blueprint-muted); white-space: pre-wrap; overflow-wrap: anywhere; max-height: 180px; overflow: auto; }
+
+/* Horizontal branches use the same rows and native drop regions as the list. */
+.blueprint-editor .blueprint-viewbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.blueprint-editor .blueprint-view-switch, .blueprint-editor .blueprint-zoom { display: inline-flex; gap: 4px; }
+.blueprint-editor .blueprint-view-switch button[aria-pressed="true"] { border-color: var(--blueprint-accent); color: var(--blueprint-accent); background: var(--blueprint-selection); }
+.blueprint-editor .blueprint-map-viewport {
+    overflow: auto; min-height: 280px; max-height: 70vh; border: 1px solid color-mix(in srgb, var(--blueprint-muted) 25%, transparent);
+    border-radius: 10px; background-image: radial-gradient(color-mix(in srgb, var(--blueprint-muted) 18%, transparent) 1px, transparent 1px);
+    background-size: 18px 18px; overscroll-behavior: contain;
+}
+.blueprint-editor .blueprint-map-viewport:focus-visible { outline: 2px solid var(--blueprint-accent); outline-offset: 2px; }
+.blueprint-editor .blueprint-map-canvas { width: max-content; min-width: 100%; box-sizing: border-box; padding: 32px 32px 90px; }
+.blueprint-readonly .blueprint-map-canvas { padding-bottom: 32px; }
+.blueprint-editor .blueprint-map-content { display: flex; align-items: center; gap: 48px; }
+.blueprint-editor button.blueprint-map-root { position: relative; flex: 0 0 auto; width: 160px; padding: 16px; border-color: var(--blueprint-accent); color: var(--blueprint-accent); background: var(--blueprint-selection); font-weight: 600; overflow-wrap: anywhere; }
+.blueprint-editor .blueprint-map-root::after,
+.blueprint-editor .feature-mindmap .feature-tree-row:has(+ ul)::after {
+    content: ""; position: absolute; top: 50%; right: -24px; width: 24px; height: 1px; background: var(--blueprint-muted); opacity: .4;
+}
+.blueprint-editor .blueprint-map-branches { position: relative; }
+.blueprint-editor .feature-mindmap, .blueprint-editor .feature-mindmap ul { display: flex; flex-direction: column; padding: 0; }
+.blueprint-editor .feature-mindmap .feature-tree-item { display: flex; align-items: center; gap: 48px; padding: 8px 0; }
+.blueprint-editor .feature-mindmap .feature-tree-item::before { content: ""; position: absolute; left: -24px; top: 50%; width: 24px; height: 1px; background: var(--blueprint-muted); opacity: .4; }
+.blueprint-editor .feature-mindmap .feature-tree-item::after { content: ""; position: absolute; left: -24px; top: 0; bottom: 0; width: 1px; background: var(--blueprint-muted); opacity: .4; }
+.blueprint-editor .feature-mindmap .feature-tree-item:first-child::after { top: 50%; }
+.blueprint-editor .feature-mindmap .feature-tree-item:last-child::after { bottom: 50%; }
+.blueprint-editor .feature-mindmap .feature-tree-item:only-child::after { display: none; }
+.blueprint-editor .feature-mindmap .feature-tree-row { flex: 0 0 190px; width: 190px; box-sizing: border-box; min-height: 46px; padding: 10px; border: 1px solid color-mix(in srgb, var(--blueprint-muted) 35%, transparent); background: var(--blueprint-surface, var(--dsw-alias-bg-layer-1, #fff)); }
+.blueprint-editor .feature-mindmap .feature-tree-row[data-kind="module"] { border-left: 3px solid var(--blueprint-accent); }
+.blueprint-editor .feature-mindmap .feature-tree-row.selected { border-color: var(--blueprint-accent); background: var(--blueprint-selection); }
+.blueprint-editor .feature-mindmap .feature-tree-row:hover { border-color: var(--blueprint-accent); }
+.blueprint-editor .feature-mindmap .feature-tree-title { white-space: normal; overflow-wrap: anywhere; }
+.blueprint-editor .feature-mindmap .drop-before > .feature-tree-row::before,
+.blueprint-editor .feature-mindmap .drop-after > .feature-tree-row::after { left: 0; right: 0; width: auto; height: 2px; opacity: 1; background: var(--blueprint-accent); }
+.blueprint-editor .feature-mindmap .drop-after > .feature-tree-row::after { top: auto; bottom: -1px; }
+.blueprint-editor .blueprint-map-branches > .feature-root-drop { position: absolute; left: 0; bottom: -64px; box-sizing: border-box; width: 340px; margin: 0; }
+@media (prefers-color-scheme: dark) {
+    .blueprint-editor { --blueprint-surface: var(--dsw-alias-bg-layer-1, #202735); }
+}
