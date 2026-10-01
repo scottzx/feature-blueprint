@@ -30,6 +30,7 @@ export interface BlueprintTreeProps<T extends BlueprintNode> {
     presentation?: BlueprintView;
     onSelect: (id: string) => void;
     onToggleCollapsed: (id: string) => void;
+    onEdit?: (id: string) => void;
     /** Must settle after saving/refetching; report failures in the owning application. */
     onMove: (id: string, move: FeatureDropMove, target: FeatureDropTarget) => Promise<void>;
     renderProgress?: (node: T) => ComponentChildren;
@@ -93,6 +94,7 @@ export function BlueprintTree<T extends BlueprintNode>(props: BlueprintTreeProps
                 data-kind={entry.node.kind}
                 draggable={!props.dragDisabled}
                 onClick={() => props.onSelect(entry.node.id)}
+                onDblClick={() => props.onEdit?.(entry.node.id)}
                 onKeyDown={event => {
                     if (event.target !== event.currentTarget || (event.key !== 'Enter' && event.key !== ' ')) return;
                     event.preventDefault(); props.onSelect(entry.node.id);
@@ -115,13 +117,14 @@ export function BlueprintTree<T extends BlueprintNode>(props: BlueprintTreeProps
                     ? <span class="feature-tree-toggle placeholder" aria-hidden="true">•</span>
                     : <button type="button" class="feature-tree-toggle"
                         aria-label={collapsed ? props.labels.expand(entry.node.title) : props.labels.collapse(entry.node.title)}
-                        aria-expanded={!collapsed} disabled={entry.children.length === 0}
+                        aria-expanded={!collapsed} disabled={props.filtering || entry.children.length === 0}
                         onClick={event => { event.stopPropagation(); props.onToggleCollapsed(entry.node.id); }}>
                         {entry.children.length === 0 ? '·' : collapsed ? '▸' : '▾'}
                     </button>}
                 <span class="feature-tree-copy">
                     <span class="feature-tree-title">{entry.node.title}</span>
                     {entry.node.notes && <span class="feature-tree-note" title={entry.node.notes}>{entry.node.notes}</span>}
+                    {!!entry.node.links?.length && <span class="feature-tree-link-count" aria-hidden="true">↗ {entry.node.links.length}</span>}
                 </span>
                 {props.renderProgress?.(entry.node)}
                 {props.renderActions && <span class="feature-tree-actions" onClick={event => event.stopPropagation()}>

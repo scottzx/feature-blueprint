@@ -10,6 +10,8 @@ const dependencies = ['react', 'react-dom', '@deepseek-ai/dsh-client-store', '@d
 const output = resolve(root, 'packages/dsh-plugin/dist');
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
+await build({ absWorkingDir: root, entryPoints: ['packages/dsh-plugin/src/host.js'],
+    outfile: resolve(output, 'host.js'), bundle: true, platform: 'node', format: 'esm', target: 'es2022' });
 const cssText = {
     name: 'inline-canvas-css-assets',
     setup(builder) {

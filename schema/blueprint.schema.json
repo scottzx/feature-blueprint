@@ -59,6 +59,80 @@
             "type": "string",
             "format": "date-time",
             "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "nodeId"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "node"
+                    },
+                    "nodeId": {
+                      "type": "string",
+                      "pattern": "\\S"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "url"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "web"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "pattern": "^[hH][tT][tT][pP][sS]?://"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "noteId",
+                    "title"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "note"
+                    },
+                    "noteId": {
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "title": {
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "pattern": "^[hH][tT][tT][pP][sS]?://"
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "Optional offline note snapshot."
+                    }
+                  }
+                }
+              ]
+            },
+            "description": "Optional node, notebook-note, and HTTP(S) references. Deleted node references remain visible as unavailable."
           }
         },
         "allOf": [

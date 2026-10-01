@@ -95,6 +95,7 @@ async function main(args) {
         else result.nodes = flattenFeatureTree(buildFeatureTree(value.document.nodes)).map(({ node, path }) => ({
             id: node.id, ...(node.parentId ? { parentId: node.parentId } : {}), kind: node.kind, title: node.title,
             ...(node.notes !== undefined ? { notes: node.notes } : {}),
+            ...(node.links !== undefined ? { links: node.links } : {}),
             position: node.position, depth: path.length - 1,
         }));
     } else {

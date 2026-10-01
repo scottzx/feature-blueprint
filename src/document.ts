@@ -1,5 +1,5 @@
 /** Versioned JSON documents shared by file viewers and the CLI. */
-import { MAX_FEATURE_MODULE_DEPTH, type BlueprintNode } from './model.js';
+import { MAX_FEATURE_MODULE_DEPTH, isBlueprintLink, type BlueprintNode } from './model.js';
 
 /** Identifies the file independently of its filename. */
 export const BLUEPRINT_FORMAT = '1agents.feature-blueprint';
@@ -18,6 +18,7 @@ function isNode(value: unknown): value is BlueprintNode {
         && 'id' in value && typeof value.id === 'string' && value.id.trim().length > 0
         && 'title' in value && typeof value.title === 'string'
         && (!('notes' in value) || value.notes === undefined || typeof value.notes === 'string')
+        && (!('links' in value) || value.links === undefined || (Array.isArray(value.links) && value.links.every(isBlueprintLink)))
         && 'kind' in value && (value.kind === 'module' || value.kind === 'feature')
         && 'position' in value && Number.isSafeInteger(value.position) && Number(value.position) >= 0
         && 'createdAt' in value && typeof value.createdAt === 'string'

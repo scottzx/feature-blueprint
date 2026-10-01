@@ -8,26 +8,33 @@ import { createHash } from 'node:crypto';
 const require = createRequire(import.meta.url);
 const source = readFileSync(new URL('../packages/dsh-plugin/dist/client.js', import.meta.url), 'utf8');
 
-test('registers sidebar editing and compound-suffix file viewing, releasing all registrations', () => {
+test('registers sidebar editing and compound-suffix file viewing, releasing all registrations', async () => {
     let definition;
     runInNewContext(source, { window: { __ModuleLoader__: { load(value) { definition = value; } } } });
     assert.equal(definition.id, '@1agents/feature-blueprint');
     const styles = new Set(), dictionaries = new Set(), types = new Set(), bodies = new Set(), viewers = new Set();
+    const components = new Map();
     const document = {
         createElement() { const sheet = { textContent: '', remove() { styles.delete(sheet); } }; return sheet; },
         head: { append(sheet) { styles.add(sheet); } },
     };
     const icon = () => null;
     const modules = {
-        react: require('react'), 'react/jsx-runtime': require('react/jsx-runtime'),
+        react: { ...require('react'), useMemo: compute => compute(), useRef: () => ({ current: undefined }),
+            useState: initial => [typeof initial === 'function' ? initial() : initial, () => {}], useEffect() {} },
+        'react/jsx-runtime': require('react/jsx-runtime'),
         '@deepseek-ai/dsh-client-store': { defineStore: value => value },
         '@deepseek-ai/dsh-client-ui-primitives': { IconWorkspaceTreeOutlineRegular: icon },
     };
     // Execute the same published client wrapper with isolated registration owners.
-    const exports = runInNewContext(`(${definition.factory.toString()})`, { document })(id => modules[id]);
+    const exports = runInNewContext(`(${definition.factory.toString()})`, { document, TextDecoder, TextEncoder, URL })(id => modules[id]);
     const disposers = [];
     const retain = (set, value) => { set.add(value); return () => set.delete(value); };
     const ctx = {
+        remote: { async $mount(definition) {
+            assert.equal(definition.descriptors[0].namespace, 'oneagentsBlueprintFiles');
+            return () => {};
+        } },
         effect(effect) { disposers.push(effect()); },
         locale: { bind() { return key => key; }, register(ns) { return retain(dictionaries, ns); } },
         sidebarRightTabs: { register(type) {
@@ -43,7 +50,8 @@ test('registers sidebar editing and compound-suffix file viewing, releasing all 
         } },
         slots: {
             inject(name, register) { assert.ok(['sidebar.right.pane.tab', 'sidebar.right.tab.document'].includes(name)); return register(); },
-            register(options) {
+            register(options, component) {
+                components.set(options.key, component);
                 if (options.name === 'sidebar.right.pane.tab') {
                     const canvas = options.key === `${definition.id}/canvas`;
                     assert.equal(options.key, canvas ? `${definition.id}/canvas` : definition.id);
@@ -54,8 +62,20 @@ test('registers sidebar editing and compound-suffix file viewing, releasing all 
         },
     };
     for (let reload = 0; reload < 2; reload++) {
-        exports.apply(ctx);
+        await exports.apply(ctx);
         assert.deepEqual([styles.size, dictionaries.size, types.size, bodies.size, viewers.size], [2, 2, 2, 4, 2]);
+        const t = key => key;
+        const sidebar = components.get(definition.id)({ useStore: select => select({ nodes: [] }), actions: { replace() {} }, t });
+        const text = JSON.stringify({ format: '1agents.feature-blueprint', version: 1, nodes: [] });
+        const body = components.get(`${definition.id}/file`)({ content: { kind: 'bytes', data: new TextEncoder().encode(text) },
+            resourceAddress: 'dsh-resource://file/session/test/product.blueprint.json', t, saveFile() {} });
+        const file = body.type(body.props);
+        const children = require('react').Children.toArray(file.props.children);
+        const surface = children.find(child => child.type === sidebar.type);
+        assert.equal(sidebar.props.canvasOnly, true);
+        assert.equal(surface?.props.canvasOnly, true, 'file previews must open the same interactive canvas as the sidebar');
+        assert.equal(surface.props.readOnly, undefined, 'the file canvas retains editing');
+        assert.equal(children.filter(child => child.props?.role === 'status').length, 0, 'idle file previews show only the canvas');
         for (const dispose of disposers.splice(0).reverse()) dispose();
         assert.deepEqual([styles.size, dictionaries.size, types.size, bodies.size, viewers.size], [0, 0, 0, 0, 0]);
     }

@@ -89,3 +89,21 @@ test('the CLI prints the URL, runs without a desktop and stops on SIGTERM', asyn
     const stopped = once(child, 'exit'); child.kill('SIGTERM');
     assert.equal((await stopped)[0], 0);
 });
+
+test('persists web, node and note references, rejecting unsafe links without altering the file', async t => {
+    const { file } = await fixture(t);
+    const { url } = await start(t, file);
+    const api = url + 'api/document';
+    const initial = await (await fetch(api)).json();
+    const links = [{ kind: 'web', url: 'https://example.com', title: '资料' }, { kind: 'node', nodeId: 'deleted' },
+        { kind: 'note', noteId: 'note-1', title: '笔记', content: '正文快照' }];
+    const saved = await post(api, { revision: initial.revision, nodes: initial.document.nodes.map(node => ({ ...node, links })) });
+    assert.equal(saved.status, 200);
+    const next = await saved.json();
+    assert.deepEqual(next.document.nodes[0].links, links);
+    assert.deepEqual(JSON.parse(await readFile(file, 'utf8')).nodes[0].links, links);
+    const before = await readFile(file, 'utf8');
+    const invalid = await post(api, { revision: next.revision, nodes: next.document.nodes.map(node => ({ ...node, links: [{ kind: 'web', url: 'javascript:alert(1)' }] })) });
+    assert.equal(invalid.status, 400);
+    assert.equal(await readFile(file, 'utf8'), before);
+});

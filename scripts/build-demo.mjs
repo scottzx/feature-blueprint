@@ -7,3 +7,4 @@ await mkdir(resolve(root, 'demo-dist'), { recursive: true });
 await build({ absWorkingDir: root, entryPoints: ['examples/demo.ts'], outfile: 'demo-dist/demo.js', bundle: true, platform: 'browser', format: 'esm', target: 'es2022' });
 await copyFile(resolve(root, 'examples/index.html'), resolve(root, 'demo-dist/index.html'));
 await copyFile(resolve(root, 'src/style.css'), resolve(root, 'demo-dist/style.css'));
+await copyFile(resolve(root, 'examples/demo.css'), resolve(root, 'demo-dist/demo.css'));

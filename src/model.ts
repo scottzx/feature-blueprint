@@ -3,6 +3,52 @@
 /** Modules can contain modules and features; features are leaves. */
 export type BlueprintNodeKind = 'module' | 'feature';
 
+/** References are independent of the hierarchy: they never move the linked node. */
+export type BlueprintLink =
+    | { kind: 'web'; url: string; title?: string }
+    | { kind: 'node'; nodeId: string }
+    | { kind: 'note'; noteId: string; title: string; url?: string; content?: string };
+
+export interface BlueprintNotebook {
+    title: string;
+    notes: { id: string; title: string; content?: string; url?: string; section?: string }[];
+}
+
+/** Only absolute HTTP(S) URLs are opened by the shared editor. */
+export function isBlueprintWebUrl(value: unknown): value is string {
+    if (typeof value !== 'string' || !/^https?:\/\//i.test(value)) return false;
+    try { const url = new URL(value); return !!url.hostname && !url.username && !url.password; }
+    catch { return false; }
+}
+
+export function isBlueprintLink(value: unknown): value is BlueprintLink {
+    if (typeof value !== 'object' || value === null) return false;
+    const link = value as Record<string, unknown>;
+    const text = (value: unknown) => typeof value === 'string' && !!value.trim();
+    if (link.kind === 'node') return text(link.nodeId);
+    if (link.kind === 'web') return isBlueprintWebUrl(link.url) && (link.title === undefined || typeof link.title === 'string');
+    return link.kind === 'note' && text(link.noteId) && text(link.title)
+        && (link.content === undefined || typeof link.content === 'string')
+        && (link.url === undefined || isBlueprintWebUrl(link.url));
+}
+
+/** Validate host/imported notebooks before creating any directory nodes. */
+export function readBlueprintNotebook(value: unknown): BlueprintNotebook {
+    if (typeof value !== 'object' || value === null) throw new Error('Invalid notebook');
+    const book = value as BlueprintNotebook;
+    if (typeof book.title !== 'string' || !book.title.trim() || !Array.isArray(book.notes)) throw new Error('Invalid notebook');
+    const ids = new Set<string>();
+    for (const note of book.notes) {
+        if (!note || typeof note.id !== 'string' || !note.id.trim() || ids.has(note.id)
+            || typeof note.title !== 'string' || !note.title.trim()
+            || (note.content !== undefined && typeof note.content !== 'string')
+            || (note.section !== undefined && typeof note.section !== 'string')
+            || (note.url !== undefined && !isBlueprintWebUrl(note.url))) throw new Error('Invalid notebook note');
+        ids.add(note.id);
+    }
+    return book;
+}
+
 /** Minimal tree data. Consumers may retain their own fields through generic projections. */
 export interface BlueprintNode {
     id: string;
@@ -11,8 +57,48 @@ export interface BlueprintNode {
     title: string;
     /** Optional plain-text, multiline remarks attached to this stable node id. */
     notes?: string;
+    links?: BlueprintLink[];
     position: number;
     createdAt: string;
+}
+
+/** Append a notebook directory with stable note references and offline content snapshots. */
+export function appendNotebookDirectory(
+    nodes: readonly BlueprintNode[], notebook: BlueprintNotebook,
+    createId: () => string = () => crypto.randomUUID(), createdAt = new Date().toISOString(),
+): readonly BlueprintNode[] {
+    readBlueprintNotebook(notebook);
+    const result: BlueprintNode[] = [...nodes];
+    const used = new Set(nodes.map(node => node.id));
+    const add = (title: string, kind: BlueprintNodeKind, parentId?: string): BlueprintNode => {
+        const id = createId();
+        if (!id.trim() || used.has(id)) throw new Error('Duplicate directory node id');
+        used.add(id);
+        const position = siblingNodes(result, parentId).reduce((max, node) => Math.max(max, node.position), -1) + 1;
+        if (!Number.isSafeInteger(position)) throw new Error('Directory position exceeds the supported range');
+        const node: BlueprintNode = { id, title, kind, parentId, createdAt, position };
+        result.push(node);
+        return node;
+    };
+    const root = add(notebook.title.trim(), 'module');
+    const sections = new Map<string, string>();
+    for (const note of notebook.notes) {
+        const section = note.section?.trim();
+        if (section && !sections.has(section)) sections.set(section, add(section, 'module', root.id).id);
+        const node = add(note.title.trim(), 'feature', section ? sections.get(section) : root.id);
+        node.notes = note.content;
+        node.links = [{ kind: 'note', noteId: note.id, title: note.title, ...(note.url ? { url: note.url } : {}),
+            ...(note.content !== undefined ? { content: note.content } : {}) }];
+    }
+    return result;
+}
+
+/** Search all text and reference titles while the caller retains matching ancestors. */
+export function matchesBlueprintQuery(node: BlueprintNode, query: string, nodes: readonly BlueprintNode[] = []): boolean {
+    const text = [node.title, node.notes, ...(node.links ?? []).map(link => link.kind === 'node'
+        ? nodes.find(target => target.id === link.nodeId)?.title : `${link.title ?? ''} ${link.url ?? ''} ${link.kind === 'note' ? link.content ?? '' : ''}`)]
+        .filter(Boolean).join('\n').toLocaleLowerCase();
+    return text.includes(query.trim().toLocaleLowerCase());
 }
 
 /** One node with its module depth, complete title path, and ordered children. */

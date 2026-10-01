@@ -1,21 +1,35 @@
 <!doctype html>
 <html lang="zh-CN">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>思维导图 · 独立组件</title>
+<meta name="color-scheme" content="light dark">
+<title>思绪 · 思维导图</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%231d1d1f'/%3E%3Cpath d='M12 20h7m0 0 7-8m-7 8 7 8' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
-<style>
-    body { margin: 0; padding: 24px; font: 14px/1.5 system-ui; color: #253047; background: #f5f7fa; }
-    h1 { font-size: 22px; font-weight: 500; margin: 0; }
-    p { color: #61708a; }
-    #app { max-width: 1100px; border-radius: 12px; background: white; }
-    @media (prefers-color-scheme: dark) {
-        body { color: #e3e8f0; background: #151a22; }
-        p { color: #a4afbf; } #app { background: #202735; --text-main: #e3e8f0; --text-muted: #a4afbf; --accent-color: #8eb8ff; }
-    }
-</style>
-<h1>思维导图</h1>
-<p>切换列表与思维导图，选择模块后添加子模块或功能点。拖拽节点调整层级，点击思维导图中心回到一级目录。</p>
-<div id="app"></div>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body class="demo-page">
+<header class="app-header">
+    <a class="brand" href="./" aria-label="思绪首页"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h7m0 0 7-7m-7 7 7 7"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="19" cy="19" r="2"/></svg></span><span>思绪<span class="brand-divider">/</span><span class="brand-caption">让想法，自然成形。</span></span></a>
+    <div class="header-actions"><span class="demo-badge">交互演示</span><button class="export-button" id="export" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 15v5h14v-5"/></svg>导出导图</button></div>
+</header>
+<div class="workspace-shell">
+    <aside class="workspace-sidebar" aria-label="笔记资料">
+        <div class="sidebar-heading"><span class="workspace-avatar">思</span><div><strong>我的创作空间</strong><span>留一个地方，给好想法。</span></div></div>
+        <p class="section-label">当前导图</p>
+        <div class="document-entry"><span class="document-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h6m0 0 6-6m-6 6 6 6"/><rect x="2" y="9" width="5" height="6" rx="1.5"/><rect x="16" y="3" width="5" height="6" rx="1.5"/><rect x="16" y="15" width="5" height="6" rx="1.5"/></svg></span><div><strong>产品构思</strong><span id="node-count">9 个节点</span></div><span class="active-dot" aria-hidden="true"></span></div>
+        <div class="notes-heading"><p class="section-label">笔记资料</p><span class="count-pill" id="note-count">3</span></div>
+        <div id="notebook-list" class="notebook-list"></div>
+        <div class="sidebar-foot"><span class="sidebar-foot-icon" aria-hidden="true">↗</span><strong>让资料成为思路的一部分。</strong><p>把笔记关联到节点，或一键生成笔记目录。</p><button id="generate-directory" type="button">生成笔记目录 <span aria-hidden="true">→</span></button></div>
+    </aside>
+    <main class="workspace-main">
+        <div class="document-header"><div><div class="document-eyebrow">我的空间 <span>/</span> 思维导图</div><h1>产品构思<span class="document-subtitle">一个想法，无限可能。</span></h1></div><div class="document-meta"><span class="status-dot" aria-hidden="true"></span><span id="edit-status" role="status">准备好记录灵感</span></div></div>
+        <div class="editor-surface" id="app"></div>
+        <footer class="workspace-footer"><span><span class="keycap">↵</span> 同级节点 <span class="keycap">⇥</span> 子节点 <span class="keycap">F2</span> 编辑</span><span>自由探索，随时导出。</span></footer>
+    </main>
+</div>
+<dialog id="note-dialog" class="note-dialog" aria-labelledby="note-dialog-title"><div class="note-dialog-header"><span class="document-eyebrow">笔记资料</span><button id="close-note" type="button" aria-label="关闭笔记">×</button></div><h2 id="note-dialog-title"></h2><p id="note-dialog-content"></p><a id="note-dialog-link" target="_blank" rel="noopener noreferrer">打开原始资料 ↗</a></dialog>
 <script type="module" src="demo.js"></script>
+</body>
 </html>

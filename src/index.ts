@@ -1,5 +1,10 @@
-/** Shared model API and the no-op Host face of the browser-only DSH plugin. */
+/** Shared model API and lazy Host entry for the DSH plugin. */
 export * from './model.js';
 
-/** DSH discovers the declared client entry; no Host services are registered. */
-export function apply(): void {}
+export const inject = ['fs', 'sandboxPolicy', 'sessions', 'sessionPersistence', 'typert'];
+
+/** Load DSH file services only when installed as a Host plugin. */
+export async function apply(ctx: unknown): Promise<void> {
+    const host = await import(new URL('../packages/dsh-plugin/dist/host.js', import.meta.url).href);
+    await host.apply(ctx);
+}

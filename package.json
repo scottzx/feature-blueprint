@@ -1,6 +1,6 @@
 {
   "name": "@1agents/feature-blueprint",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Mind maps and Excalidraw canvas with CLIs, browser editors and a DSH plugin",
   "type": "module",
   "license": "MIT",
@@ -40,6 +40,7 @@
     "cli",
     "schema",
     "examples/product.blueprint.json",
+    "examples/notebook.json",
     "web-dist",
     "cordis.patch.yml",
     "packages/dsh-plugin/dist",
@@ -119,7 +120,8 @@
       "inject": [
         "@deepseek-ai/dsh-client-ui-sidebar-right",
         "@deepseek-ai/dsh-client-locale",
-        "@deepseek-ai/dsh-client-ui-sidebar-documentpreview"
+        "@deepseek-ai/dsh-client-ui-sidebar-documentpreview",
+        "@deepseek-ai/dsh-api-gateway"
       ],
       "external": [
         "react",

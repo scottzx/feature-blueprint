@@ -95,3 +95,27 @@ test('both presentations show remarks as plain text without interpreting markup'
         assert.doesNotMatch(html, /<script>/);
     }
 });
+
+test('optional organization controls stay available in readonly views without mutation tools', async () => {
+    const { blueprintToolsEn: tools } = await import('../dist/labels.js');
+    const html = render(h(BlueprintEditor, { nodes, readOnly: true, onChange() {}, labels: { ...props.labels, views, tools } }));
+    assert.match(html, /Search nodes, notes and references/);
+    assert.match(html, /Expand all/);
+    assert.match(html, /Collapse all/);
+    assert.doesNotMatch(html, /Generate note directory|blueprint-link-form|type="file"|blueprint-toolbar/);
+});
+
+test('canvas-only sidebar starts in the map and omits workspace tools while keeping accessible editing', async () => {
+    const { blueprintToolsEn: tools } = await import('../dist/labels.js');
+    const labels = { ...props.labels, views, tools, addModule: 'Add module', addFeature: 'Add feature', rename: 'Rename', remove: 'Delete' };
+    const html = render(h(BlueprintEditor, { nodes, canvasOnly: true, initialZoom: .85, labels, onChange() {} }));
+    assert.match(html, /blueprint-canvas-only/);
+    assert.match(html, /blueprint-map-viewport/);
+    assert.match(html, /aria-label="Add root"/);
+    assert.match(html, /aria-label="Zoom in"/);
+    assert.match(html, /zoom:0.85/);
+    assert.doesNotMatch(html, /blueprint-organize|blueprint-view-switch|blueprint-shortcuts|blueprint-notebook-info|Generate note directory|type="file"/);
+    const readonly = render(h(BlueprintEditor, { nodes, canvasOnly: true, readOnly: true, labels, onChange() {} }));
+    assert.doesNotMatch(readonly, /blueprint-toolbar/);
+    assert.match(readonly, /draggable="false"/);
+});

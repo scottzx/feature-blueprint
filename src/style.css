@@ -48,10 +48,27 @@
 .blueprint-readonly .feature-root-drop { display: none; }
 .blueprint-editor .blueprint-toolbar, .blueprint-editor .blueprint-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
 .blueprint-editor .blueprint-form label { display: flex; align-items: center; gap: 8px; }
-.blueprint-editor button:not(.feature-tree-toggle), .blueprint-editor input, .blueprint-editor textarea {
+.blueprint-editor button:not(.feature-tree-toggle), .blueprint-editor input, .blueprint-editor textarea, .blueprint-editor select {
     max-width: 100%; min-width: 0; border: 1px solid var(--blueprint-muted); border-radius: 7px;
     padding: 6px 8px; color: inherit; background: transparent; font: inherit;
 }
+.blueprint-editor .blueprint-organize { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.blueprint-editor .blueprint-search, .blueprint-editor .blueprint-collapse-controls, .blueprint-editor .blueprint-link-form { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.blueprint-editor .blueprint-search { flex: 1 1 260px; }
+.blueprint-editor .blueprint-search input { flex: 1; min-width: 160px; }
+.blueprint-editor .blueprint-search [role="status"], .blueprint-editor .blueprint-shortcuts, .blueprint-editor .blueprint-notebook-info { color: var(--blueprint-muted); font-size: 12px; }
+.blueprint-editor .blueprint-shortcuts { margin: 8px 0 12px; line-height: 1.6; }
+.blueprint-editor .blueprint-file-input { display: none; }
+.blueprint-editor .blueprint-node-links { padding: 10px 12px; margin-bottom: 12px; border-radius: 7px; background: var(--blueprint-hover); }
+.blueprint-editor .blueprint-node-links li { display: flex; align-items: center; gap: 8px; margin-top: 6px; overflow-wrap: anywhere; }
+.blueprint-editor .blueprint-node-links a { color: var(--blueprint-accent); }
+.blueprint-editor .blueprint-link-form { margin-top: 10px; }
+.blueprint-editor .blueprint-backlink { margin: 6px 6px 0 0; }
+.blueprint-editor .blueprint-node-links details { flex: 1; min-width: 0; }
+.blueprint-editor .blueprint-node-links summary { cursor: pointer; color: var(--blueprint-accent); }
+.blueprint-editor .blueprint-node-links details p { white-space: pre-wrap; max-height: 180px; overflow: auto; }
+.blueprint-editor .feature-tree-link-count { display: inline-block; margin-top: 3px; font-size: 11px; color: var(--blueprint-accent); }
+.blueprint-editor select option { color: var(--blueprint-ink); background: var(--blueprint-surface, #fff); }
 .blueprint-editor button:disabled { opacity: .5; cursor: default; }
 .blueprint-editor .blueprint-empty { color: var(--blueprint-muted); }
 .blueprint-editor .feature-tree-note { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--blueprint-muted); font-size: 12px; font-weight: 400; margin-top: 3px; }
@@ -70,7 +87,7 @@
     background-size: 18px 18px; overscroll-behavior: contain;
 }
 .blueprint-editor .blueprint-map-viewport:focus-visible { outline: 2px solid var(--blueprint-accent); outline-offset: 2px; }
-.blueprint-editor .blueprint-map-canvas { width: max-content; min-width: 100%; box-sizing: border-box; padding: 32px 32px 90px; }
+.blueprint-editor .blueprint-map-canvas { width: max-content; min-width: 100%; box-sizing: border-box; padding: 32px 32px 90px; transform: translate(var(--blueprint-pan-x, 0px), var(--blueprint-pan-y, 0px)); }
 .blueprint-readonly .blueprint-map-canvas { padding-bottom: 32px; }
 .blueprint-editor .blueprint-map-content { display: flex; align-items: center; gap: 48px; }
 .blueprint-editor button.blueprint-map-root { position: relative; flex: 0 0 auto; width: 160px; padding: 16px; border-color: var(--blueprint-accent); color: var(--blueprint-accent); background: var(--blueprint-selection); font-weight: 600; overflow-wrap: anywhere; }
@@ -98,3 +115,35 @@
 @media (prefers-color-scheme: dark) {
     .blueprint-editor { --blueprint-surface: var(--dsw-alias-bg-layer-1, #202735); }
 }
+
+/* DSH sidebar: the canvas fills the pane, with tools appearing over it. */
+.blueprint-editor.blueprint-canvas-only { position: relative; height: 100%; min-height: 280px; padding: 0; overflow: hidden; }
+.blueprint-canvas-only .blueprint-map-viewport { height: 100%; min-height: 280px; max-height: none; border: 0; border-radius: 0; background-size: 22px 22px; }
+.blueprint-canvas-only .blueprint-map-canvas { padding: 64px 24px 90px; }
+.blueprint-canvas-only .blueprint-viewbar { position: absolute; bottom: 16px; left: 16px; z-index: 2; margin: 0; }
+.blueprint-canvas-only .blueprint-zoom { padding: 3px; gap: 1px; border: 1px solid color-mix(in srgb, var(--blueprint-muted) 15%, transparent); border-radius: 10px; background: var(--blueprint-surface, var(--dsw-alias-bg-layer-1, #fff)); box-shadow: 0 3px 16px #00000006; }
+.blueprint-canvas-only .blueprint-zoom button { border: 0; min-width: 25px; padding: 4px 7px; font-size: 11px; }
+.blueprint-canvas-only .blueprint-toolbar { position: absolute; right: 12px; top: 12px; z-index: 3; padding: 4px; margin: 0; gap: 2px; max-width: calc(100% - 24px); border-radius: 12px; border: 1px solid color-mix(in srgb, var(--blueprint-muted) 15%, transparent); background: var(--blueprint-surface, var(--dsw-alias-bg-layer-1, #fff)); box-shadow: 0 3px 16px #00000006; }
+.blueprint-canvas-only:not(.blueprint-has-selection) .blueprint-toolbar button:not([data-blueprint-action="add-root"]) { display: none; }
+.blueprint-canvas-only .blueprint-toolbar button { width: 29px; height: 29px; padding: 0; border: 0; font-size: 0; }
+.blueprint-canvas-only .blueprint-toolbar button::before { font-size: 16px; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="add-module"]::before { content: '+'; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="add-feature"]::before { content: '•'; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="rename"]::before { content: '✎'; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="notes"]::before { content: '≡'; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="details"]::before { content: '↗'; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="remove"]::before { content: '×'; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="add-root"]::before { content: '+'; }
+.blueprint-canvas-only .blueprint-toolbar [data-blueprint-action="add-root"] { color: var(--blueprint-accent); background: var(--blueprint-selection); }
+.blueprint-canvas-only .blueprint-toolbar button:hover:not(:disabled) { background: var(--blueprint-hover); }
+.blueprint-canvas-only:not(.blueprint-show-details) .blueprint-inspector { display: none; }
+.blueprint-canvas-only .blueprint-inspector { position: absolute; top: 58px; right: 12px; z-index: 2; width: min(300px, calc(100% - 24px)); max-height: calc(100% - 130px); overflow: auto; padding: 14px; border: 1px solid color-mix(in srgb, var(--blueprint-muted) 15%, transparent); border-radius: 12px; background: var(--blueprint-surface, var(--dsw-alias-bg-layer-1, #fff)); box-shadow: 0 8px 32px #00000010; }
+.blueprint-canvas-only .blueprint-form { position: absolute; top: 58px; left: 12px; right: 12px; z-index: 4; padding: 14px; border: 1px solid color-mix(in srgb, var(--blueprint-muted) 15%, transparent); border-radius: 12px; background: var(--blueprint-surface, var(--dsw-alias-bg-layer-1, #fff)); box-shadow: 0 8px 32px #00000010; max-height: calc(100% - 130px); overflow: auto; }
+.blueprint-canvas-only .blueprint-form > label { min-width: 0; width: 100%; }
+.blueprint-canvas-only .blueprint-form input { flex: 1; width: 100%; }
+.blueprint-canvas-only .blueprint-empty { position: absolute; left: 24px; right: 24px; top: 42%; text-align: center; font-size: 12px; pointer-events: none; }
+.blueprint-canvas-only .feature-mindmap .feature-tree-row { width: 160px; flex-basis: 160px; font-size: 12px; border-radius: 10px; border-color: color-mix(in srgb, var(--blueprint-muted) 18%, transparent); }
+.blueprint-canvas-only .feature-mindmap .feature-tree-row[data-kind="module"] { border-left: 1px solid color-mix(in srgb, var(--blueprint-muted) 18%, transparent); }
+.blueprint-canvas-only .blueprint-map-root { width: 130px; border-radius: 12px; }
+.blueprint-canvas-only .feature-root-drop { opacity: 0; }
+.blueprint-canvas-only:has(.dragging) .feature-root-drop { opacity: 1; }

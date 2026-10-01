@@ -1,0 +1,8 @@
+{
+  "title": "产品研究笔记",
+  "notes": [
+    { "id": "interviews", "title": "用户访谈", "section": "需求调研", "content": "记录访谈观察、使用场景与待验证假设。" },
+    { "id": "references", "title": "参考资料", "section": "需求调研", "url": "https://example.com", "content": "相关网页与资料摘要。" },
+    { "id": "ideas", "title": "灵感收集", "section": "方案设计", "content": "先快速列出想法，再拖拽整理层级。" }
+  ]
+}
