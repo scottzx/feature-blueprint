@@ -14,3 +14,5 @@ Status checked 2026-10-10; submissions are awaiting review, not yet confirmed li
 The only installation target is `@1agents/feature-blueprint@0.4.1` at the root. The public source manifest is 0.3.0 without generated runtime files; use npm or the [verified artifact mirror](https://github.com/scottzx/feature-blueprint/releases/tag/npm-v0.4.1). The npm artifact's source commit remains unknown.
 
 Separate new profiles passed both npm and Release installation, real Loader/client serving, file save and stale-write rejection. See [verification](verification.md) and [sanitized route evidence](install-routes.json). These are publication preparation checks. Each market's actual advertised target still requires independent acceptance after listing.
+
+Canonical PR7030 passed all CI checks, including full site build and Submission gate, on 2026-10-10 ([run](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/actions/runs/38029859938)). Maintainer review is still pending.
