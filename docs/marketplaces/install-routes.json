@@ -1,0 +1,61 @@
+{
+  "checked_at_utc": "2026-10-10T06:05:40.867626+00:00",
+  "status": "pre_submission_passed",
+  "verification_scope": "Advertised npm and Release targets independently installed in new profiles; not post-listing marketplace acceptance",
+  "published_source_commit": "unknown; npm gitHead absent",
+  "independent_from_each_other_and_screenshot_profile": true,
+  "routes": [
+    {
+      "route": "npm-route",
+      "actual_command": [
+        "dsh",
+        "plugin",
+        "--profile",
+        "web",
+        "add",
+        "@1agents/feature-blueprint@0.4.1"
+      ],
+      "installed_name": "@1agents/feature-blueprint",
+      "installed_version": "0.4.1",
+      "integrity": "sha512-HJdZxfm97nEa3XqMcqNhXduywrEuIE+aNv03FamapE6pLIgmfDgGNzvQFP4kAPLhYGPDxpadNGdfnFRVbwkuCw==",
+      "integrity_matches_official_npm_tarball": true,
+      "profile_specifier": "0.4.1",
+      "activation_warnings": 0,
+      "main_client_http_status": 200,
+      "lazy_client_http_status": 200,
+      "main_lazy_payloads_match": true,
+      "real_file_save_success": true,
+      "stale_save_rejected": true,
+      "process_stopped": true,
+      "port_closed": true,
+      "temporary_root_removed": true,
+      "original_sources_unchanged": true
+    },
+    {
+      "route": "release-route",
+      "actual_command": [
+        "dsh",
+        "plugin",
+        "--profile",
+        "web",
+        "add",
+        "https://github.com/scottzx/feature-blueprint/releases/download/npm-v0.4.1/feature-blueprint-0.4.1.tgz"
+      ],
+      "installed_name": "@1agents/feature-blueprint",
+      "installed_version": "0.4.1",
+      "integrity": "sha512-HJdZxfm97nEa3XqMcqNhXduywrEuIE+aNv03FamapE6pLIgmfDgGNzvQFP4kAPLhYGPDxpadNGdfnFRVbwkuCw==",
+      "integrity_matches_official_npm_tarball": true,
+      "profile_specifier": "https://github.com/scottzx/feature-blueprint/releases/download/npm-v0.4.1/feature-blueprint-0.4.1.tgz",
+      "activation_warnings": 0,
+      "main_client_http_status": 200,
+      "lazy_client_http_status": 200,
+      "main_lazy_payloads_match": true,
+      "real_file_save_success": true,
+      "stale_save_rejected": true,
+      "process_stopped": true,
+      "port_closed": true,
+      "temporary_root_removed": true,
+      "original_sources_unchanged": true
+    }
+  ]
+}

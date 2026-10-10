@@ -1,6 +1,6 @@
 # DSH plugin installation verification
 
-Tested on 2026-10-10 with the public npm package **`@1agents/feature-blueprint@0.4.1`**, installed from a byte-verified tarball. The root package provides the plugin and CLIs; `packages/dsh-plugin` is private development source and must not be advertised as a separate install target.
+Tested on 2026-10-10 with the public npm package **`@1agents/feature-blueprint@0.4.1`**, verified first from the byte-checked tarball and then independently through the pinned npm and fixed Release URLs. The root package provides the plugin and CLIs; `packages/dsh-plugin` is private development source and must not be advertised as a separate install target.
 
 ## Artifact
 
@@ -17,11 +17,12 @@ The public source manifest at `4c01c6d845991425038de7f6ae20eea438e78fff` is `0.3
 - Node.js 22.22.1; pnpm 10.34.5.
 - Existing local DSH development tree: manifest `0.2.0-rc.1`, base commit `21638c56315ae6a2b552d6091945d3144c9af32e`, with pre-existing local changes. This is not a claim about an unmodified official release.
 - Separate temporary `HOME`, `DSH_HOME`, workspace and new `web` profile; telemetry disabled; no personal sessions or credentials copied.
-- `dsh plugin --profile web add <verified-tarball>` succeeded and enabled the root bundle.
+- Three independent fresh environments succeeded and enabled the same public root bundle: the byte-verified local tarball, `dsh plugin --profile web add @1agents/feature-blueprint@0.4.1`, and `dsh plugin --profile web add https://github.com/scottzx/feature-blueprint/releases/download/npm-v0.4.1/feature-blueprint-0.4.1.tgz`.
+- The npm and Release profiles both resolved version `0.4.1`, recorded the same official npm integrity in the lockfile, and matched the patch and six inspected runtime/client entries byte for byte. Each route independently passed Loader, HTTP and save checks below.
 - Real DSH Cordis Loader, ClientModuleRegistry and full web profile started without plugin activation warnings.
 - Main and lazy canvas client requests returned HTTP 200 with bytes matching the installed package.
 - Real plugin file-save RPC succeeded; a stale revision was rejected and did not replace newer content.
-- No model call was made.
+- No model call was made. All owned servers were stopped, their ports closed, and temporary homes, profiles and credentials removed. Both original development trees retained their initial file fingerprints.
 
 This is publication preparation testing. Each market's actual advertised installation target must be checked again in a separate fresh environment after that market lists the plugin. Git source installation is not verified and is not advertised here.
 
