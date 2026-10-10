@@ -2,6 +2,29 @@
 
 一个 MIT npm 包，包含思维导图、Excalidraw 自由画布、各自的 CLI 和独立浏览器编辑器，以及提供两个侧栏入口的 DSH 插件，统一名称及版本号：`@1agents/feature-blueprint`。CLI 和独立编辑器需要 Node.js 22+；使用它们无需安装或启动 DSH。
 
+## Install in DeepSeek Harness
+
+The public plugin is **`@1agents/feature-blueprint@0.4.1`**, installed from the repository root. It provides mind maps and an Excalidraw canvas in the DSH sidebar, plus local-file previews. Node.js 22+ is required.
+
+```sh
+dsh plugin --profile web add @1agents/feature-blueprint@0.4.1
+dsh web --profile web
+```
+
+Restart an already running web profile after installation. Open a session and choose **Mind Map / 思维导图** or **Canvas / 自由画布** in the right sidebar. Global CLI installation does not activate the DSH plugin.
+
+If npm is unavailable, install the same published package from the [0.4.1 npm artifact mirror](https://github.com/scottzx/feature-blueprint/releases/tag/npm-v0.4.1):
+
+```sh
+dsh plugin --profile web add https://github.com/scottzx/feature-blueprint/releases/download/npm-v0.4.1/feature-blueprint-0.4.1.tgz
+```
+
+Download [SHA256SUMS](https://github.com/scottzx/feature-blueprint/releases/download/npm-v0.4.1/SHA256SUMS) to verify the tarball. The Release attachment mirrors the npm bytes; it is not a source build from the Release tag. The public `main` source manifest is currently `0.3.0`; the exact source commit used to publish npm `0.4.1` is not recorded in its registry metadata. Use the npm package or Release attachment for installation rather than an unbuilt Git checkout.
+
+![Mind Map in DSH](docs/marketplaces/screenshots/mind-map.png)
+
+Screenshots and the exact local test environment are documented in [DSH market verification](docs/marketplaces/verification.md). See [plugin usage and storage behavior](packages/dsh-plugin/README.md) for file editing, session storage and prerequisites. Support for every official DSH release has not been established.
+
 ```sh
 npm install -g @1agents/feature-blueprint
 blueprint init product.blueprint.json

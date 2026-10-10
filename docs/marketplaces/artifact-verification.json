@@ -1,0 +1,18 @@
+{
+  "checked_at_utc": "2026-10-10T05:45:06.708672+00:00",
+  "name": "@1agents/feature-blueprint",
+  "version": "0.4.1",
+  "metadata_url": "https://registry.npmjs.org/@1agents%2Ffeature-blueprint/0.4.1",
+  "registry_http_status": 200,
+  "tarball_url": "https://registry.npmjs.org/@1agents/feature-blueprint/-/feature-blueprint-0.4.1.tgz",
+  "tarball_bytes": 5496140,
+  "sha256": "5e4ef5ed55be7956373003a66bfd940312c887498037950b2f72713e6c896216",
+  "integrity": "sha512-HJdZxfm97nEa3XqMcqNhXduywrEuIE+aNv03FamapE6pLIgmfDgGNzvQFP4kAPLhYGPDxpadNGdfnFRVbwkuCw==",
+  "registry_integrity": "sha512-HJdZxfm97nEa3XqMcqNhXduywrEuIE+aNv03FamapE6pLIgmfDgGNzvQFP4kAPLhYGPDxpadNGdfnFRVbwkuCw==",
+  "integrity_matches": true,
+  "git_head": null,
+  "published_source_commit": "unknown; npm metadata has no gitHead; do not infer from current source",
+  "source_repository": "https://github.com/scottzx/feature-blueprint",
+  "public_source_manifest_version": "0.3.0",
+  "public_source_commit_at_preparation": "4c01c6d845991425038de7f6ae20eea438e78fff"
+}

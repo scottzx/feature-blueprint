@@ -1,5 +1,17 @@
 # DSH Mind Map
 
+## Published installation (0.4.1)
+
+Install the public **root** package, not this private development package:
+
+```sh
+dsh plugin --profile web add @1agents/feature-blueprint@0.4.1
+dsh web --profile web
+```
+
+Node.js 22+ is required. Restart an already running profile, open a session, and choose Mind Map / 思维导图 or Canvas / 自由画布 in the right sidebar. The [Release artifact mirror](https://github.com/scottzx/feature-blueprint/releases/tag/npm-v0.4.1) contains the same built npm tarball as a fallback. The public source manifest is currently `0.3.0`; the exact source commit for npm `0.4.1` is unknown. An unbuilt Git checkout is not the advertised installation target. See the [actual screenshots and local verification scope](../../docs/marketplaces/verification.md).
+
+
 DSH 插件随统一包 `@1agents/feature-blueprint` 一起发布，与 `blueprint` CLI 共用版本号；本目录是源码目录，不单独发布 `@1agents/dsh-feature-blueprint`。
 
 把思维导图和 Excalidraw 自由画布注册到 DeepSeek Harness 现有右侧边栏，提供两个独立入口。打开会话后，在右侧边栏的开始页选择“思维导图”，即可添加模块、添加功能点、重命名、删除叶节点、展开折叠和拖拽调整层级。
