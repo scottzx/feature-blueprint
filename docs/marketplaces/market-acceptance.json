@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/scottzx/feature-blueprint",
+  "public_package": {
+    "name": "@1agents/feature-blueprint",
+    "version": "0.4.1",
+    "directory": "",
+    "artifact_build_source_commit": null,
+    "provenance_note": "npm gitHead absent; documentation commit and artifact-mirror tag are not build-source evidence"
+  },
+  "submission_receipts": {
+    "dsh_marketplace": {
+      "submitted_at_utc": "2026-10-11T10:11:13.248000+00:00",
+      "received_at_utc": "2026-10-11T10:11:14.078000+00:00",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "duplicate": false,
+        "repository": "scottzx/feature-blueprint",
+        "already_listed_at_submission": false
+      },
+      "visible_confirmation": "Submission received; scottzx/feature-blueprint is queued for review.",
+      "status": "received_pending_review",
+      "post_listing_acceptance": "not_performed_not_listed"
+    }
+  },
+  "post_listing_acceptance": {
+    "dsplugin": {
+      "started_at_utc": "2026-10-11T10:14:01.939221+00:00",
+      "completed_at_utc": "2026-10-11T10:14:31.362258+00:00",
+      "entry_identity": "scottzx/feature-blueprint",
+      "entry_source": "discovered",
+      "advertised_command": "dsh plugin --profile web add github:scottzx/feature-blueprint",
+      "advertised_target": "github:scottzx/feature-blueprint",
+      "status": "failed_post_listing_advertised_target",
+      "channel_acceptance": "blocked_advertised_git_target",
+      "install": {
+        "argv": [
+          "dsh",
+          "plugin",
+          "--profile",
+          "web",
+          "add",
+          "github:scottzx/feature-blueprint"
+        ],
+        "exit_code": 1,
+        "duration_seconds": 29.117605542007368
+      },
+      "resolved_source": {
+        "package_name": "@1agents/feature-blueprint",
+        "version": "0.3.0",
+        "commit": "0f3f369b072b8179297963e0ab9b92914f975243",
+        "installed_package_version": null,
+        "fixed_tree_truncated": false,
+        "files": [
+          {
+            "path": "cordis.patch.yml",
+            "committed": true
+          },
+          {
+            "path": "dist/index.js",
+            "committed": false
+          },
+          {
+            "path": "packages/dsh-plugin/dist/host.js",
+            "committed": false
+          },
+          {
+            "path": "packages/dsh-plugin/dist/client.js",
+            "committed": false
+          },
+          {
+            "path": "packages/dsh-plugin/dist/client.canvas.js",
+            "committed": false
+          }
+        ]
+      },
+      "failure_stage": "installation_git_prepare_allowlist",
+      "failure_code": "ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED",
+      "source_build_executed": false,
+      "build_allowlist_modified": false,
+      "npm_or_release_substituted": false,
+      "runtime_checks": {
+        "bundle_enablement": "not_verified_after_failed_add",
+        "loader": "not_executed_installation_failed",
+        "main_client_http": "not_executed_installation_failed",
+        "lazy_client_http": "not_executed_installation_failed",
+        "file_save": "not_executed_installation_failed",
+        "stale_write_rejection": "not_executed_installation_failed"
+      },
+      "isolation": {
+        "fresh_home": true,
+        "fresh_dsh_home": true,
+        "new_profile": "web",
+        "synthetic_workspace": true,
+        "personal_credentials_copied": false,
+        "personal_sessions_read": false,
+        "model_calls": false
+      },
+      "environment": {
+        "source_head": "21638c56315ae6a2b552d6091945d3144c9af32e",
+        "manifest_version": "0.2.0-rc.1",
+        "node": "22.22.1",
+        "pnpm": "10.34.5",
+        "telemetry": "DISABLED",
+        "official_release_compatibility": "not claimed"
+      },
+      "original_sources_unchanged": true,
+      "original_changed_entry_counts": {
+        "dsh": 337,
+        "project": 61
+      },
+      "cleanup": {
+        "temporary_root_removed": true,
+        "temporary_home_profile_cache_credentials_removed": true,
+        "raw_private_log_removed": true,
+        "owned_server_ever_started": false,
+        "listening_port_ever_opened": false,
+        "processes_with_owned_root_remaining": [],
+        "process_audit_at_utc": "2026-10-11T10:15:59.843820+00:00"
+      },
+      "correction": {
+        "pull_request": "https://github.com/vbarter/dsh-plugin-registry/pull/342",
+        "head": "94194b73e51098768cd422f586e33d5157b350ca",
+        "state": "OPEN",
+        "proposed_command": "dsh plugin --profile web add @1agents/feature-blueprint@0.4.1",
+        "corrected_public_command_acceptance": "pending_publication_and_independent_test"
+      }
+    }
+  },
+  "compatibility": {
+    "dsh_pub": {
+      "status": "planned_not_implemented",
+      "maintainer_plan": "https://github.com/dsh-pub/dsh-pub/issues/131#issuecomment-6103964957",
+      "fixture_reply": "https://github.com/dsh-pub/dsh-pub/issues/131#issuecomment-6107952113",
+      "plugin_submission_received": false
+    }
+  },
+  "scope_note": "Received web form, post-listing Git failure, prepublication npm/Release success and planned compatibility support are distinct states. No current successful dsplugin acceptance is claimed."
+}

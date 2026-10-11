@@ -24,7 +24,7 @@ The public source manifest at `4c01c6d845991425038de7f6ae20eea438e78fff` is `0.3
 - Real plugin file-save RPC succeeded; a stale revision was rejected and did not replace newer content.
 - No model call was made. All owned servers were stopped, their ports closed, and temporary homes, profiles and credentials removed. Both original development trees retained their initial file fingerprints.
 
-This is publication preparation testing. Each market's actual advertised installation target must be checked again in a separate fresh environment after that market lists the plugin. Git source installation is not verified and is not advertised here.
+This is publication preparation testing. Each market's actual advertised installation target must be checked again in a separate fresh environment after that market lists the plugin. The successful results above do not verify Git source installation. The separate dsplugin advertised Git installation failure is recorded below.
 
 ## Screenshots
 
@@ -35,3 +35,19 @@ The screenshots below show the actual plugin in that isolated DSH web profile, u
 ![Excalidraw file preview in DSH](screenshots/excalidraw-canvas.png)
 
 Both file previews were opened through the DSH workspace browser. The 13-topic document and its converted 42-element canvas are synthetic fixtures. The browser used a 1440 × 900 desktop viewport. Session sidebar entries for Mind Map and Canvas were also observed in the real plugin.
+
+## dsplugin advertised installation acceptance — 2026-10-11
+
+The public automatically discovered entry for `scottzx/feature-blueprint` advertised:
+
+```sh
+dsh plugin --profile web add github:scottzx/feature-blueprint
+```
+
+This exact command was tested independently in a new temporary `HOME`, `DSH_HOME`, synthetic workspace and `web` profile, using the same DSH development environment described above. It exited 1 after approximately 29 seconds with `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED`. The resolved package was source version `0.3.0` at commit `0f3f369b072b8179297963e0ab9b92914f975243`, rather than published npm `0.4.1`. A complete fixed Git tree confirmed that `cordis.patch.yml` exists, while `dist/index.js` and the plugin's generated host, main client and lazy canvas files are not committed.
+
+The failure occurred at Git dependency preparation. No source build was run or build allowlist changed. No npm or Release target was substituted. Installation did not complete, so bundle enablement, Loader, client HTTP, file save and stale-write rejection were not verified for this market route. This is a failed post-listing installation check, not a failure of the independently verified npm/Release archives.
+
+No plugin server or listening port was started. The temporary home, profile, package cache and credentials were removed, no owned processes remained, and raw private logs were removed. Before/after Git status and diff fingerprints matched for both original development trees (DSH: 337 existing changed entries; project: 61). No personal sessions or credentials were copied, and no model call was made. See [sanitized market evidence](market-acceptance.json).
+
+Existing [PR342](https://github.com/vbarter/dsh-plugin-registry/pull/342) now corrects the command to pinned `@1agents/feature-blueprint@0.4.1`; it remains open. Once the corrected command is public, dsplugin requires another independent fresh-profile installation and full runtime acceptance. The npm artifact's build-source commit remains unknown.
